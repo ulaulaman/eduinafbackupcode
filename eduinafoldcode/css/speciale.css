@@ -1,0 +1,39 @@
+div.paleBlueRows {
+  border: 1px solid #FFFFFF;
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+}
+.divTable.paleBlueRows .divTableCell, .divTable.paleBlueRows .divTableHead {
+  border: 1px solid #D0E4F5;
+  padding: 3px 2px;
+}
+.divTable.paleBlueRows .divTableBody .divTableCell {
+  font-size: 15px;
+}
+.divTable.paleBlueRows .divTableHeading {
+  background: #1D71B8;
+  border-bottom: 2px solid #D0E4F5;
+}
+.divTable.paleBlueRows .divTableHeading .divTableHead {
+  font-size: 17px;
+  font-weight: bold;
+  color: #FFFFFF;
+  text-align: center;
+  border-left: 2px solid #D0E4F5;
+}
+.divTable.paleBlueRows .divTableHeading .divTableHead:first-child {
+  border-left: none;
+}
+
+.paleBlueRows .tableFootStyle {
+  font-size: 14px;
+}
+/* DivTable.com */
+.divTable{ display: table; }
+.divTableRow { display: table-row; }
+.divTableHeading { display: table-header-group;}
+.divTableCell, .divTableHead { display: table-cell;}
+.divTableHeading { display: table-header-group;}
+.divTableFoot { display: table-footer-group;}
+.divTableBody { display: table-row-group;}
