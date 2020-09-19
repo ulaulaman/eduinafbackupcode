@@ -1,2 +1,1 @@
-# eduinafbackupcode
-Codice di backup o deprecato di EduINAF
+Backup di vari codici usati dentro EduINAF. Alcuni sono ora integrati dentro il [plugin *ufficiale*](https://github.com/ulaulaman/eduinaf).
