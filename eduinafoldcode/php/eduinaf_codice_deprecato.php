@@ -46,3 +46,24 @@ function specialishort($atts) {
 	return $content;
 }
 add_shortcode( 'specialishort', 'specialishort' );
+
+/* snippet cancellati */
+
+# header didattica
+
+add_shortcode( 'header_didattica', function () {
+
+	$header = '<header><div class="breadcrumb hidden-xs"><div class="vbreadcrumb" typeof="v:Breadcrumb"><a href="https://edu.inaf.it/" property="v:title" class="home">Home</a> / <a href="https://edu.inaf.it/astrodidattica/" property="v:title">Didattica</a></div></div>';
+	$title = '<h1 itemprop="name" style="color:black;">'.get_the_title().'</h1>';
+	if ( has_excerpt ()) {
+		$excerpt ='<div><em>'.get_the_excerpt().'</em></div>';
+	} else {
+		$excerpt = '';
+	}
+	$date = '<div class="breadcrumb hidden-xs"><time class="entry-date">'.get_the_date().'</time></div></header>';
+	$out = $header.$title.$date.$excerpt;
+
+	return $out;
+} );
+
+
