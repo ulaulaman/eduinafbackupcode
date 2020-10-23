@@ -1,3 +1,13 @@
+/* Non più utilizzato */
+
+# inclusione di grid.css
+# function edu_inaf_to_the_head () {
+#   wp_register_style( 'grid', plugins_url( 'eduinaf/incl/grid.css' ) );
+#   wp_enqueue_style( 'grid' );
+# }
+#
+#add_action( 'wp_enqueue_scripts', 'edu_inaf_to_the_head' );
+
 /* Deprecrato in attesa di capire come realizzare uno stile che eviti errori nella barra laterale */
 
 #shortcode per mostrare in una tabella l'elenco degli articoli di uno speciale: da utilizzare in un widget di testo in attesa di creare un widget vero e proprio
