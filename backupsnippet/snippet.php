@@ -2,22 +2,8 @@
 #
 # backup snippet codes
 #
-# astrodidattica
-#
-add_shortcode( 'header_didattica', function () {
 
-	$header = '<header><div class="breadcrumb hidden-xs"><div class="vbreadcrumb" typeof="v:Breadcrumb"><a href="https://edu.inaf.it/" property="v:title" class="home">Home</a> / <a href="https://edu.inaf.it/astrodidattica/" property="v:title">Didattica</a></div></div>';
-	$title = '<h1 class="entry-title" itemprop="name" style="color:black;">'.get_the_title().'</h1>';
-	if ( has_excerpt ()) {
-		$excerpt ='<div><em>'.get_the_excerpt().'</em></div>';
-	} else {
-		$excerpt = '';
-	}
-	$date = '<div class="breadcrumb hidden-xs"><time class="entry-date">'.get_the_date().'</time></div></header>';
-	$out = $header.$title.$date.$excerpt;
-
-	return $out;
-} );
+/* Metabox didattica */
 
 # Aggiunta metabox
 add_action( 'load-post.php', 'didattica_meta_box_setup' );
@@ -32,17 +18,24 @@ function didattica_meta_box_setup() {
 
 function didattica_meta_box() {
 
-  $intro = __( 'Reminder shortcode header', 'edu-inaf' );
+  $intro = __( 'Reminder shortcode videorubriche', 'edu-inaf' );
+	
+	#$screens = get_post_types();
+	
+	$screens = array ( 'astrodidattica' );
+	
+	foreach ( $screens as $screen ) {
 
   add_meta_box(
     'didattica-post-class',      // ID unico
     esc_html__( $intro, 'example' ),    // Titolo
     'didattica_class_meta_box',   // funzione
-    'astrodidattica',         // associato a
+    $screen,         // associato a
     'side',         // contesto
     'high'         // priorità
   );
 }
+	}
 
 # mostra il metabox
 function didattica_class_meta_box( $post ) { ?>
@@ -50,19 +43,41 @@ function didattica_class_meta_box( $post ) { ?>
   <?php wp_nonce_field( basename( __FILE__ ), 'didattica_class_nonce' ); ?>
 
   <p>
-    <label for="didattica-post-class"><?php _e( 'Ricordarsi di inserire un box di testo in cima con lo shortcode [header_didattica]<br/>Per la spalla:<ul><li>Schede didattiche: [sc name="spalla_attivita" dimgruppo="numero studenti" costo="costo"]</li><li>Video lezioni: [sc name="spallavideo"]</li></ul>Shortcode per le introduzioni delle rubriche:<br/><strong>Astrofisica per curiosi</strong>: [curiosi]<br/><strong>Pillole di Martina Cardillo</strong>: [martina]<br/><strong>Pillole di realtà virtuale</strong>: [rv]<br/><strong>Pillole dallo spazio</strong>: [pillole_spazio]', 'edu-inaf' ); ?></label></p>
+    <label for="didattica-post-class"><?php _e( 'Shortcode per le introduzioni delle rubriche:<br/><strong>Astrofisica per curiosi</strong>: [curiosi]<br/><strong>Pillole di Martina Cardillo</strong>: [martina]<br/><strong>Pillole di realtà virtuale</strong>: [rv]<br/><strong>Pillole dallo spazio</strong>: [pillole_spazio]', 'edu-inaf' ); ?></label></p>
 <?php }
 
-# personalizzazione css font sezioni
+/* personalizzazione css */
 
 add_action( 'wp_head', function () { ?>
-	<style>
+<style>
+	.astrodidattica .meta-category { display:none; }
+	.astrodidattica .herald-post-thumbnail-single { display:none; }
+	.astrodidattica #extras { display:none; }
+	.astrodidattica .co-author { display:none; }
 	
-		.astrodidattica-template { font-size: 150%; }
-		.astroschede-template { font-size: 150%; }
+	.astrofoto .meta-category { display:none; }
 	
-	</style>
-	<?php } );
+	.costellazioni .meta-category { display:none; }
+	
+	.astroschede-template .entry-title { display:none; }
+	.astroschede-template .entry-meta { display:none; }
+	.astroschede-template .entry-headline { display:none; }
+	.astroschede-template .meta-category { display:none; }
+	.astroschede-template .herald-sidebar { display:none; }
+	.astroschede-template .herald-post-thumbnail-single { display:none; }
+	.astroschede-template #extras { display:none; }
+	
+	.page-id-16929 .entry-title { display:none; }
+	.page-id-18718 .entry-title { display:none; }
+	.page h1.entry-title { display:none; }
+	
+	.entry-headline { font-style: italic; }
+	
+	.twitter-tweet { margin:auto; }
+	.fb-post { margin:auto;border:none;overflow:hidden }
+	
+</style>
+<?php } );
 
 # pillole martina
 
@@ -112,29 +127,11 @@ add_shortcode( 'pillole_spazio', function () {
 	return $out;
 } );
 
-# immagini livelli dida
-
-add_shortcode( 'livelli_img', function () {
-	
-	$img = '<div align="center"><img src="https://edu.inaf.it/wp-content/plugins/eduinaf/images/avatar_eduinaf_blu.png" width="40%" /></div>';
-	$terms = get_the_terms( $post->ID, 'livello_educativo' ); 
-	$numcat=sizeof($terms);
- 	foreach ( $terms as $term ) { 
-		$term_link = get_term_link( $term, 'livello_educativo' );
-		$img = $img.'<a rel="tag" href="'.$term_link.'" title="Vedi tutte le attività del livello: '.$term->name.'"><img src="https://edu.inaf.it/wp-content/plugins/eduinaf/images/'.$term->slug.'.png" width="25%" /></a>';
-	}
-	
-	$out = $img;
-
-	return $out;
-} );
-
-# videorubriche
+# menu videorubriche
 
 add_shortcode( 'videorubriche', function () {
 
-	$pillole = '<h3>Le nostre videorubriche</h3><p>Tutte le <a href="https://edu.inaf.it/videorubriche/">Videorubriche</a></p>
-	<ul><li><a href="https://edu.inaf.it/videorubriche/astrofisica-per-curiosi/">Astrofisica per curiosi</a></li><li><a href="https://edu.inaf.it/videorubriche/pillole-di-martina-cardillo/">Le pillole di Martina</a></li><li><a href="https://edu.inaf.it/videorubriche/astronomia-e-modelli-3d/">Astronomia e modelli 3D</a></li><li><a href="https://edu.inaf.it/videorubriche/pillole-dallo-spazio/">Pillole dallo spazio</a></li></ul>';
+	$pillole = '<h4>Le nostre videorubriche</h4><div class="btn-group"><button><a href="https://edu.inaf.it/videorubriche/">Tutte le videorubriche</button><button><a href="https://edu.inaf.it/videorubriche/astrofisica-per-curiosi/">Astrofisica per curiosi</a></button><button><a href="https://edu.inaf.it/videorubriche/pillole-di-martina-cardillo/">Le pillole di Martina</a></button><button><a href="https://edu.inaf.it/videorubriche/pillole-dallo-spazio/">Pillole dallo spazio</a></button><button><a href="https://edu.inaf.it/videorubriche/astronomia-e-modelli-3d/">Astronomia e modelli 3D</a></button></div>';
 	$out = $pillole;
 
 	return $out;
@@ -144,8 +141,8 @@ add_shortcode( 'videorubriche', function () {
 
 add_shortcode( 'newsletter', function () {
 
-	$inforv = '<p>Vuoi restare aggiornato sulle novità di Edu INAF? Iscriviti alla lista di distribuzione inviando un email a:  Newsletter.edu+subscribe [chiocciola] inaf.it<br/>In qualasiasi momento potete cancellare l\'iscrizione semplicemente inviando un\'email a Newsletter.edu+unsubscribe [chiocciola] inaf</p>';
-	$privacy = '<p>La redazione garantisce che il trattamento dei dati personali (nome, cognome ed indirizzo email) avviene nel rispetto della normativa sulla privacy (Regolamento (UE) 2016/679 e Codice privacy, di cui al Decreto legislativo n. 196/2003) e dei principi di correttezza, liceità e trasparenza e di tutela della tua riservatezza e dei tuoi diritti e potrà essere svolto in via manuale o in via elettronica, o comunque con l’ausilio di strumenti informatizzati o automatizzati, al solo fine di fornire il servizio richiesto e, per tale ragione, saranno conservati esclusivamente per il periodo in cui lo stesso sarà attivo. Il Titolare del trattamento è l’INAF - Istituto Nazionale di Astrofisica, con sede legale in Roma, viale del Parco Mellini, 84 – 00136. I tuoi dati sono trattati dai personale e dai collaboratori dell’INAF autorizzati dal Titolare al trattamento, in relazione alle loro funzioni e mansioni, o dalle imprese espressamente designate quali Responsabili delle attività di trattamento ai sensi dell’art. 28 GDPR. Gli interessati hanno il diritto di chiedere al titolare del trattamento l’accesso ai dati personali e la rettifica o la cancellazione degli stessi o la limitazione del trattamento che li riguarda o di opporsi al trattamento (artt. 15 e ss. del Regolamento (UE) 2016/679). L’apposita istanza all’INAF è presentata contattando il Responsabile della Protezione dei Dati presso l’Istituto (Istituto Nazionale di Astrofisica – Responsabile della protezione dei dati personali, viale del Parco Mellini, 84, 00136 Roma; email: rpd@inaf.it; PEC: rpd-inaf@legalmail.it). Gli interessati che ritengono che il trattamento dei dati personali a loro riferiti effettuato attraverso questo servizio avvenga in violazione di quanto previsto dal Regolamento hanno il diritto di proporre reclamo al Garante, come previsto dall\'art. 77 del Regolamento stesso, o di adire le opportune sedi giudiziarie (art. 79 del Regolamento).</p>';
+	$inforv = '<p>Vuoi restare aggiornato sulle novità di Edu INAF? Iscriviti alla lista di distribuzione inviando un email a:  <strong>Newsletter.edu+subscribe [chiocciola] inaf.it</strong><br/>In qualasiasi momento potete cancellare l\'iscrizione semplicemente inviando un\'email a <strong>Newsletter.edu+unsubscribe [chiocciola] inaf</strong></p>';
+	$privacy = '<p>La redazione garantisce che il trattamento dei dati personali (nome, cognome ed indirizzo email) avviene nel rispetto della normativa sulla privacy (Regolamento (UE) 2016/679 e Codice privacy, di cui al Decreto legislativo n. 196/2003) e dei principi di correttezza, liceità e trasparenza e di tutela della tua riservatezza e dei tuoi diritti e potrà essere svolto in via manuale o in via elettronica, o comunque con l\'ausilio di strumenti informatizzati o automatizzati, al solo fine di fornire il servizio richiesto e, per tale ragione, saranno conservati esclusivamente per il periodo in cui lo stesso sarà attivo. Il Titolare del trattamento è l\'INAF - Istituto Nazionale di Astrofisica, con sede legale in Roma, viale del Parco Mellini, 84 – 00136. I tuoi dati sono trattati dai personale e dai collaboratori dell\'INAF autorizzati dal Titolare al trattamento, in relazione alle loro funzioni e mansioni, o dalle imprese espressamente designate quali Responsabili delle attività di trattamento ai sensi dell\'art. 28 GDPR. Gli interessati hanno il diritto di chiedere al titolare del trattamento l\'accesso ai dati personali e la rettifica o la cancellazione degli stessi o la limitazione del trattamento che li riguarda o di opporsi al trattamento (artt. 15 e ss. del Regolamento (UE) 2016/679). L’apposita istanza all\'INAF è presentata contattando il Responsabile della Protezione dei Dati presso l\'Istituto (Istituto Nazionale di Astrofisica – Responsabile della protezione dei dati personali, viale del Parco Mellini, 84, 00136 Roma; email: rpd [chiocciola] inaf.it; PEC: rpd-inaf [chiocciola] legalmail.it). Gli interessati che ritengono che il trattamento dei dati personali a loro riferiti effettuato attraverso questo servizio avvenga in violazione di quanto previsto dal Regolamento hanno il diritto di proporre reclamo al Garante, come previsto dall\'art. 77 del Regolamento stesso, o di adire le opportune sedi giudiziarie (art. 79 del Regolamento).</p>';
 	$out = $inforv.$privacy;
 
 	return $out;
@@ -169,3 +166,188 @@ add_shortcode( 'header_astroschede', function () {
 
 	return $out;
 } );
+
+# footnote
+
+add_shortcode( 'footnotereg', function () {
+
+	$footnote1 = '<p>EduINAF è il magazine di didattica e divulgazione dell\'INAF, <a href="http://www.inaf.it/" target="inaf">Istituto Nazionale di Astrofisica</a>.<br/>Registrazione n. 45/2020 in data 4 giugno 2020, Tribunale di Roma<br/>Direttore responsabile: Livia Giacomini<br/><a href="https://edu.inaf.it/edu-inaf/la-redazione/">Redazione</a></p>';
+	
+	$out = $footnote1;
+
+	return $out;
+} );
+
+add_shortcode( 'footnotepriv', function () {
+
+	$footnote2 = '<p>Vuoi usare i contenuti di EduINAF? <a href="https://edu.inaf.it/edu-inaf/copyright/">Leggi i Crediti</a>.</p><p><a href="https://edu.inaf.it/privacy-info/">Informativa sulla Privacy</a><br/><a href="https://edu.inaf.it/cookies-info/">Informatva sui Cookie</a></p>';
+	
+	$out = $footnote2;
+
+	return $out;
+} );
+
+add_shortcode( 'footnoteform', function () {
+
+	$footnote3 = '<p><a href="https://edu.inaf.it/contatti/">Inviaci i tuoi contributi</a></p><p>Per la rubrica de l\'Astronomo risponde, segui le istruzioni nella <a href="https://edu.inaf.it/astronomo-risponde/">colonna a destra della pagina</a> oppure <a href="https://edu.inaf.it/contatti/">compila il form</a></p>';
+	
+	$out = $footnote3;
+
+	return $out;
+} );
+
+# olimpiadi
+
+add_shortcode( 'menuolimpiadi', function () {
+	
+	$olimpiadi = '<button><a href="https://edu.inaf.it/olimpiadi-di-astronomia/">Cosa sono le Olimpiadi</a></button>';
+	$dispense = '<button><a href="https://edu.inaf.it/olimpiadi-di-astronomia/risorse-didattiche-olimpiadi/">Dispense</a></button>';
+	$esercizi = '<button><a href="http://www.olimpiadiastronomia.it/per-prepararsi/esercizi-e-problemi-di-gara/" target="oli">Esercizi delle passate edizioni</a></button>';
+	$syllabus = '<button><a href="http://www.olimpiadiastronomia.it/syllabus/" target="oli">Syllabus</a></button>';
+	$notizie = '<button><a href="https://edu.inaf.it/category/news/inaf-societa/olimpiadi-di-astronomia/" target="eduinaf">Archivio notizie</a></button>';
+	$moodle = '<button><a href="http://moodle.olimpiadi.inaf.it/" target="inaf">Moodle</a></button>';
+	
+	$menu = '<div align="center" class="btn-group">'.$olimpiadi.$dispense.$esercizi.$syllabus.$notizie.'</div>';
+	
+	$out = $menu;
+
+	return $out;
+} );
+
+# concorso rodari
+
+add_shortcode( 'menurodari', function () {
+	
+	$home = '<button><a href="https://edu.inaf.it/concorso-gianni-rodari/">Home page del concorso</a></button>';
+	$scatole = '<button><a href="https://edu.inaf.it/concorso-gianni-rodari/scatole-colorate/">Scatole colorate</a></button>';
+	$bio = '<button><a href="https://edu.inaf.it/concorso-gianni-rodari/gianni-rodari/">Chi è Gianni Rodari</a></button>';
+	
+	$news = '<a href="https://edu.inaf.it/news/premi-e-concorsi/fate-largo-ai-sognatori/" target="eduinaf">Fate largo ai sognatori!</a>';
+	$beni = '<a href="http://www.beniculturali.inaf.it/eventi/universi-da-ascoltare/" target="inaf">Universi da ascoltare</a>';
+	
+	$menu = '<div align="center" class="btn-group">'.$home.$scatole.$bio.'</div>';
+	
+	$pagine = '<div align="center" style="padding-top:40px;"><strong>Pagine correlate</strong><br/>'.$news.'<br/>'.$beni.'</div>';
+	
+	$out = $menu.$pagine;
+
+	return $out;
+} );
+
+add_shortcode( 'rodaridoc', function () {
+	
+	$informativa = '<a href="https://edu.inaf.it/wp-content/uploads/2020/10/Informativa_concorso_Rodari2020.pdf" target="pdf">Informativa sul trattamento dei dati personali</a>';
+	$bando = '<a href="https://edu.inaf.it/wp-content/uploads/2020/10/BANDO_Concorso_GianniRodari_2020.pdf" target="pdf">Bando del concorso</a></button>';
+	$scheda = '<a href="https://edu.inaf.it/wp-content/uploads/2020/10/pubblicazione_contenuti_Rodari.pdf" target="pdf">Scheda di autorizzazione</a>';
+	$locandine = 'Locandine: <a href="https://edu.inaf.it/wp-content/uploads/2020/10/A-Gianni-Rodari-A4-20201019.pdf" target="pdf">in nero</a>, <a href="https://edu.inaf.it/wp-content/uploads/2020/10/A-Gianni-Rodari-A4-20201019-QR.pdf" target="pdf">in bianco</a>';
+	$form = '<a href="https://forms.gle/cBNmqLyitYCGUJJ79" target="form">Modulo di iscrizione</a>';
+	
+	$allegati = '<div align="center"><strong>Modulo e documentazione</strong><br/>'.$form.'<br/>'.$bando.'<br/>'.$scheda.'<br/>'.$informativa.'<br/>'.$locandine.'</div>';
+	
+	$out = $allegati;
+
+	return $out;
+} );
+
+# PCTO
+
+add_shortcode( 'menupcto', function () {
+	
+	$home = '<li><a href="https://edu.inaf.it/pcto/">Percorsi per le competenze trasversali e per l’orientamento</a></li>';
+	$archivio = '<li><a href="https://edu.inaf.it/pcto/i-progetti-alternanza-scuola-lavoro/">Archivio progetti</a></li>';
+	$doc = '<li><a href="https://edu.inaf.it/pcto/documentazione-utile/">Documentazione utile</a></li>';
+	$gradimento = '<li><a href="https://edu.inaf.it/pcto/questionario-di-gradimento/">Questionario di gradimento</a></li>';
+	
+	$iaps = '<li><a href="https://edu.inaf.it/pcto/istituto-astrofisica-planetologia-spaziali/">Istituto di Astrofisica e Planetologia Spaziali</a></li>';
+	$brera = '<li><a href="https://edu.inaf.it/pcto/osservatorio-astronomico-di-brera/">Osservatorio Astronomico di Brera</a></li>';
+	$capodimonte = '<li><a href="https://edu.inaf.it/pcto/osservatorio-astronomico-di-capodimonte/">Osservatorio Astronomico di Capodimonte</a></li>';
+	
+	$attivi = '<div id="recent-posts-2" class="widget widget_recent_entries"><h4 class="widget-title h6"><span>PCTO Attivi</span></h4><ul>'.$iaps.$brera.$capodimonte.'</ul></div>';
+	
+	$menu = '<div id="recent-posts-2" class="widget widget_recent_entries"><h4 class="widget-title h6"><span>PCTO</span></h4><ul>'.$home.$archivio.$doc.'</ul></div>';
+	
+	$out = $menu.$attivi;
+
+	return $out;
+} );
+
+/**
+ * Adds Foo_Widget widget.
+ */
+class Widget_PCTO extends WP_Widget {
+ 
+    /**
+     * Register widget with WordPress.
+     */
+    public function __construct() {
+        parent::__construct(
+            'widget_pcto', // Base ID
+            'Menu PCTO', // Name
+            array( 'description' => __( 'Widget per l\'inserimento del menu delle pagine PCTO', 'text_domain' ), ) // Args
+        );
+    }
+ 
+    /**
+     * Front-end display of widget.
+     *
+     * @see WP_Widget::widget()
+     *
+     * @param array $args     Widget arguments.
+     * @param array $instance Saved values from database.
+     */
+    public function widget( $args, $instance ) {
+        extract( $args );
+		$menu = do_shortcode('[menupcto]');
+		$news = do_shortcode('[postlooptab tag="PCTO"]');
+        echo $menu;
+		echo $news;
+        echo $after_widget;
+    }
+ 
+    /**
+     * Back-end widget form.
+     *
+     * @see WP_Widget::form()
+     *
+     * @param array $instance Previously saved values from database.
+     */
+    public function form( $instance ) {
+        if ( isset( $instance[ 'title' ] ) ) {
+            $title = $instance[ 'title' ];
+        }
+        else {
+            $title = __( 'New title', 'text_domain' );
+        }
+        ?>
+        <p>
+            <label for="<?php echo $this->get_field_name( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
+            <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+         </p>
+    <?php
+    }
+ 
+    /**
+     * Sanitize widget form values as they are saved.
+     *
+     * @see WP_Widget::update()
+     *
+     * @param array $new_instance Values just sent to be saved.
+     * @param array $old_instance Previously saved values from database.
+     *
+     * @return array Updated safe values to be saved.
+     */
+    public function update( $new_instance, $old_instance ) {
+        $instance = array();
+        $instance['title'] = ( !empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+ 
+        return $instance;
+    }
+ 
+} // class Widget_PCTO
+
+// Register Widget_PCTO widget
+add_action( 'widgets_init', 'register_pcto' );
+     
+function register_pcto() { 
+    register_widget( 'Widget_PCTO' ); 
+}
