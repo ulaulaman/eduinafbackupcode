@@ -351,3 +351,79 @@ add_action( 'widgets_init', 'register_pcto' );
 function register_pcto() { 
     register_widget( 'Widget_PCTO' ); 
 }
+
+#menu didattica
+add_shortcode( 'menudidattica', function () {
+	
+	$astrodid = '<button><a href="https://edu.inaf.it/astrodidattica/">Risorse didattiche</a></button>';
+	$corsi = '<button><a href="https://edu.inaf.it/corsi-di-formazione/">Corsi di formazione</a></button>';
+	$schede = '<button><a href="https://edu.inaf.it/astroschede/">Schede astronomiche</a></button>';
+	$corso = '<button><a href="https://edu.inaf.it/corso_base_brera/introduzione/">Corso base di astronomia</a></button>';
+	$inclusione = '<button><a href="https://edu.inaf.it/inaf-didattica-inclusiva/">Didattica inclusiva</a></button>';
+	$tink = '<button><a href="https://edu.inaf.it/didattica-innovativa/">Didattica innovativa</a></button>';
+	
+	$menu = '<div align="center" class="btn-group">'.$astrodid.$inclusione.$tink.$corso.$schede.$corsi.'</div>';
+	
+	$out = $menu;
+
+	return $out;
+} );
+
+#ultimo aggiornamento
+function wpb_last_updated_date( $content ) {
+$u_time = get_the_time('U'); 
+$u_modified_time = get_the_modified_time('U'); 
+if ($u_modified_time >= $u_time + 86400) { 
+$updated_date = get_the_modified_time('j F Y');
+$updated_time = get_the_modified_time('h:i a'); 
+$custom_content .= '<p class="last-updated">Ultimo aggiornamento il '. $updated_date . ' alle '. $updated_time .'</p>';  
+} 
+ 
+    $custom_content .= $content;
+	
+	if ( get_post_type() <> 'page' ){
+		return $custom_content;
+	} else {
+		return $content;
+	}    
+}
+add_filter( 'the_content', 'wpb_last_updated_date' );
+
+#sidebar corso brera
+add_shortcode( 'sbcorsobase', function () {
+	
+	$logo = '<p align="center"><img src="https://edu.inaf.it/wp-content/plugins/eduinaf/images/loghi/corso_base_astro.png" /></p>';
+	
+	$autore = do_shortcode('[blog-post-coauthors]');
+	
+	$intro = '<button><a href="https://edu.inaf.it/corso_base_brera/introduzione/">L\'Universo in fiore – corso base di astronomia</a></button>';
+	$cap1 = '<button><a href="https://edu.inaf.it/corso_base_brera/introduzione-astronomia/">Introduzione all\'astronomia</a></button>';
+	$cap2 = '<button><a href="https://edu.inaf.it/corso_base_brera/il-sistema-solare/">Il sistema solare: origini e caratteristiche</a></button>';
+	$cap3 = '<button><a href="https://edu.inaf.it/corso_base_brera/i-pianeti-extrasolari/">I pianeti extrasolari</a></button>';
+	$cap4 = '<button><a href="https://edu.inaf.it/corso_base_brera/evoluzione-stellare/">Evoluzione stellare</a></button>';
+	$cap5 = '<button><a href="https://edu.inaf.it/corso_base_brera/le-piu-grandi-esplosioni/">Le più grandi esplosioni dell\'Universo</a></button>';
+	$cap6 = '<button><a href="https://edu.inaf.it/corso_base_brera/relitti-stellari-nane-bianche-stelle-di-neutroni-buchi-neri/">Relitti stellari: nane bianche, stelle di neutroni e buchi neri</a></button>';
+	$cap7 = '<button><a href="https://edu.inaf.it/corso_base_brera/nel-regno-delle-galassie/">Nel regno delle galassie</a></button>';
+	$cap8 = '<button><a href="https://edu.inaf.it/corso_base_brera/i-giganti-del-cosmo-gli-ammassi-di-galassie/">I giganti del cosmo: gli ammassi di galassie</a></button>';
+	$cap9 = '<button><a href="https://edu.inaf.it/corso_base_brera/il-modello-cosmologico-standard-e-lenigma-dellespansione/">Il modello cosmologico standard e l\'enigma dell\'espansione</a></button>';
+	
+	$menu = '<div align="center" class="btn-group">'.$intro.$cap1.$cap2.$cap3.$cap4.$cap5.$cap6.$cap7.$cap8.$cap9.'</div>';
+	
+	$custom = get_post_custom();
+	foreach( $custom as $key => $value ) {
+		$key_name = get_post_custom_values( $key = 'pdfcap' );
+		if ( $key_name[0] <> null ) {
+			$capitolo = '<p><a href="'.$key_name[0].'" target="pdf">Scarica la lezione in pdf</a></p>';
+		} else {
+			$capitolo = null;
+		}
+	}
+	
+	$cap = '<p><strong>Lezione a cura di</strong>: '.$autore.'</p>';
+	
+	$sidebar = $logo.$cap.$capitolo.$menu;
+	
+	$out = $sidebar;
+
+	return $out;
+} );
