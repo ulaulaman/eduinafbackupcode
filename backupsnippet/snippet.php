@@ -427,3 +427,44 @@ add_shortcode( 'sbcorsobase', function () {
 
 	return $out;
 } );
+
+#sidebar astroschede
+add_shortcode( 'sbastroscheda', function () {
+	
+	$custom = get_post_custom();
+	foreach( $custom as $key => $value ) { 
+		$key_name = get_post_custom_values( $key = 'urlfoto' );
+		if ( $key_name[0] <> null ) {
+			$foto1 = '<p><img src="'.$key_name[0].'" /></p>';
+		} else { $foto1 = null; }		
+		if ( $key_name[1] <> null ) {
+			$foto2 = '<p><img src="'.$key_name[1].'" /></p>';
+		} else { $foto2 = null; }
+		
+		$key_name = get_post_custom_values( $key = 'dati' );
+		if ( $key_name[0] <> null ) {
+			$dati1 = '<p>'.$key_name[0].'</p>';
+		} else { $dati1 = null; }		
+		if ( $key_name[1] <> null ) {
+			$dati2 = '<p>'.$key_name[1].'</p>';
+		} else { $dati2 = null; }
+		
+		$key_name = get_post_custom_values( $key = 'nome' );
+		if ( $key_name[0] <> null ) {
+			$nome1 = '<h4 class="widget-title"><span>'.$key_name[0].'</span></h4>';
+		} else { $nome1 = null; }		
+		if ( $key_name[1] <> null ) {
+			$nome2 = '<h4 class="widget-title"><span>'.$key_name[1].'</span></h4>';
+		} else { $nome2 = null; }
+	}
+	
+	$auth = do_shortcode("[blog-post-coauthors]");
+	
+	$cura = '<p>Scheda a cura di <strong>'.$auth.'</strong></p>';
+	
+	$menu = do_shortcode("[menucostellazioni]");
+	
+	$out = $cura.$foto1.$nome1.$dati1.$foto2.$nome2.$dati2.$menu;
+
+	return $out;
+} );
