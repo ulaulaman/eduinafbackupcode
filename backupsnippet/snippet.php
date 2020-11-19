@@ -389,7 +389,7 @@ $custom_content .= '<p class="last-updated">Ultimo aggiornamento il '. $updated_
 }
 add_filter( 'the_content', 'wpb_last_updated_date' );
 
-#sidebar corso brera
+#sidebar corso brera old
 add_shortcode( 'sbcorsobase', function () {
 	
 	$logo = '<p align="center"><img src="https://edu.inaf.it/wp-content/plugins/eduinaf/images/loghi/corso_base_astro.png" /></p>';
@@ -465,6 +465,108 @@ add_shortcode( 'sbastroscheda', function () {
 	$menu = do_shortcode("[menucostellazioni]");
 	
 	$out = $cura.$foto1.$nome1.$dati1.$foto2.$nome2.$dati2.$menu;
+
+	return $out;
+} );
+
+# sidebar teatro
+add_shortcode( 'sbteatro', function () {
+	
+	$custom = get_post_custom();
+	foreach( $custom as $key => $value ) { 
+		$key_name = get_post_custom_values( $key = 'urllocandina' );
+		if ( $key_name[0] <> null ) {
+			$locandina = '<div align="center"><img src="'.$key_name[0].'" /></div>';
+		} else { $locandina = null; }
+		
+		$key_name = get_post_custom_values( $key = 'contatto' );
+		if ( $key_name[0] <> null ) {
+			$contatto = '<p><strong>Contatto</strong>: '.$key_name[0].'</p>';
+		} else { $contatto = null; }
+		
+		$key_name = get_post_custom_values( $key = 'locandinafile' );
+		if ( $key_name[0] <> null ) {
+			$file = '<div align="center">(<a href="'.$key_name[0].'" target="out">scarica la locandina</a>)</div>';
+		} else { $file = null; }
+	}
+	
+	$terms = get_the_terms ( $post->ID, 'formato_spettacolo' );
+	$numcat = sizeof( $terms );
+		$i = 0;
+		foreach ( $terms as $term ) {
+			$term_link = get_term_link( $term, 'formato_spettacolo' );
+			$i++;
+			if ( $i < $numcat ) {
+				$formato = $formato.'<a rel="tag" href="'.$term_link.'"><strong>'.$term->name.'</strong></a>, ';
+			} else {
+				$formato = $formato.'<a rel="tag" href="'.$term_link.'"><strong>'.$term->name.'</strong></a>';
+			}
+		}
+	
+	$terms = get_the_terms ( $post->ID, 'durata_spettacolo' );
+	$numcat = sizeof( $terms );
+		foreach ( $terms as $term ) {
+			$term_link = get_term_link( $term, 'durata_spettacolo' );
+			$durata = '<p><strong>Durata</strong>: <a rel="tag" href="'.$term_link.'">'.$term->name.'</a></p>';
+		}
+	
+	$terms = get_the_terms ( $post->ID, 'eta_spettatori' );
+	$numcat = sizeof( $terms );
+		$i = 0;
+		foreach ( $terms as $term ) {
+			$term_link = get_term_link( $term, 'eta_spettatori' );
+			$i++;
+			if ( $i < $numcat ) {
+				$spettatori = $spettatori.'<a rel="tag" href="'.$term_link.'">'.$term->name.'</a>, ';
+			} else {
+				$spettatori = $spettatori.'<a rel="tag" href="'.$term_link.'">'.$term->name.'</a>';
+			}
+		}
+	
+	$consigliato = '<p><strong>Consigliato per</strong>: '.$spettatori;
+	
+	$terms = get_the_terms ( $post->ID, 'citta_spettacolo' );
+	$numcat = sizeof( $terms );
+		$i = 0;
+		foreach ( $terms as $term ) {
+			$term_link = get_term_link( $term, 'citta_spettacolo' );
+			$i++;
+			if ( $i < $numcat ) {
+				$city = $city.'<a rel="tag" href="'.$term_link.'">'.$term->name.'</a>, ';
+			} else {
+				$city = $city.'<a rel="tag" href="'.$term_link.'">'.$term->name.'</a>';
+			}
+		}
+	
+	if ( $city <> null ) {
+		$tour= '<p><strong>Città o sede INAF di riferimento</strong>: '.$city;
+	} else {
+		$tour = null;
+	}
+	
+	
+	$out = '<p>'.$locandina.$file.'</p><p>'.$formato.'</p>'.$durata.$consigliato.$tour.$contatto;
+
+	return $out;
+} );
+
+# codice che recupera automaticamente le voci di un menu a partire dal suo id
+# source: https://wordpress.stackexchange.com/questions/111060/retrieving-a-list-of-menu-items-in-an-array
+add_shortcode( 'menuprova', function () {
+	
+	//$menuLocations = get_nav_menu_locations();
+	//$menuID = $menuLocations['Sedi INAF'];
+	$primaryNav = wp_get_nav_menu_items(728); // menu di prova 728
+	
+	foreach ( $primaryNav as $navItem ) {
+
+    $nav = $nav. '<li><a href="'.$navItem->url.'" title="'.$navItem->title.'">'.$navItem->title.'</a></li>';
+
+}
+	
+	$menu = '<div id="recent-posts-2" class="widget widget_recent_entries"><h4 class="widget-title h6"><span>Menu di prova</span></h4><ul>'.$nav.'</ul></div>';
+	
+	$out = $menu;
 
 	return $out;
 } );
