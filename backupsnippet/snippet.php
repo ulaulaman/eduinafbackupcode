@@ -75,6 +75,20 @@ add_action( 'wp_head', function () { ?>
 	
 	.twitter-tweet { margin:auto; }
 	.fb-post { margin:auto;border:none;overflow:hidden }
+
+	#cit::before { content: open-quote; }
+	#cit::after { content: close-quote; }
+	#cit { 
+		quotes: "«" "»" "‘" "’";
+		font-style: italic;
+	}
+	
+	#box {
+		margin: 15px;
+		padding: 10px 25px 10px 25px;
+		background: #fafafa;
+		border: 1px solid #1d71b8;
+	}
 	
 </style>
 <?php } );
