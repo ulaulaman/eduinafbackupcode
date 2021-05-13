@@ -1,3 +1,33 @@
+/* Momentaneamente escluso */
+
+$auth = null;
+	$custom = get_post_custom();
+	foreach( $custom as $key => $value ) {
+		$key_name = get_post_custom_values( $key = 'autore_attivita' );
+		if ( $key_name[0] <> null ) {
+			$auth1 = '<strong>'.$key_name[0].'</strong>';
+		} else {
+			$auth1 = null;
+		}
+		if ( $key_name[1] <> null ) {
+			$auth2 = ', <strong>'.$key_name[1].'</strong>';
+		} else {
+			$auth2 = null;
+		}
+		if ( $key_name[2] <> null ) {
+			$auth3 = ', <strong>'.$key_name[2].'</strong>';
+		} else {
+			$auth3 = null;
+		}
+		if ( $key_name[3] <> null ) {
+			$auth4 = ', <strong>'.$key_name[3].'</strong>';
+		} else {
+			$auth4 = null;
+		}
+		
+		$auth = $auth1.$auth2.$auth3.$auth4;
+	}
+
 /* Non più utilizzato */
 
 # inclusione di grid.css
