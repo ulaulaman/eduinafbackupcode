@@ -66,6 +66,13 @@ add_action( 'wp_head', function () { ?>
 	.astroschede-template .herald-sidebar { display:none; }
 	.astroschede-template .herald-post-thumbnail-single { display:none; }
 	.astroschede-template #extras { display:none; }
+
+	.teatro-inaf #extras { display:none; }
+	.teatro-inaf .herald-rtime { display:none; }
+	.teatro-inaf .meta-category { display:none; }
+
+	.oae_italia .meta-category { display:none; }
+	.oae_italia #extras { display:none; }
 	
 	.page-id-16929 .entry-title { display:none; }
 	.page-id-18718 .entry-title { display:none; }
@@ -82,12 +89,42 @@ add_action( 'wp_head', function () { ?>
 		quotes: "«" "»" "‘" "’";
 		font-style: italic;
 	}
-	
+
+	/* vecchio codice delle domande */
+	#ask::before {
+		content: "";
+		height: 30px;
+		width: 30px;
+		background: url(https://edu.inaf.it/wp-content/plugins/eduinaf/images/avatar_eduinaf_blu.png) no-repeat;
+		position: absolute;
+		margin-left: -35px;
+		background-size: 21px;
+		margin-top: 6px;
+	}
+	#ask { 
+		padding-left: 35px;
+		font-weight: bold;
+	}
+	/* --- */
+
 	#box {
 		margin: 15px;
 		padding: 10px 25px 10px 25px;
 		background: #fafafa;
 		border: 1px solid #1d71b8;
+	}
+
+	#dida {
+		padding: 20px;
+		text-align: center;
+	}
+	
+	#didar {
+		float: right;
+		width: 45%;
+		padding: 20px;
+		text-align: center;
+		font-style: italic;
 	}
 	
 </style>
@@ -395,7 +432,7 @@ $custom_content .= '<p class="last-updated">Ultimo aggiornamento il '. $updated_
  
     $custom_content .= $content;
 	
-	if ( get_post_type() <> 'page' ){
+	if ( get_post_type() <> 'page' && get_post_type() <> 'oae_italia' ){
 		return $custom_content;
 	} else {
 		return $content;
